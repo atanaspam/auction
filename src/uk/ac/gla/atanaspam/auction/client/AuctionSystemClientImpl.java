@@ -27,8 +27,8 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
 
     public AuctionSystemClientImpl() throws RemoteException{
         try {
-            server = (AuctionSystem) Naming.lookup("rmi://localhost/AuctionSystemService");
-            System.out.println(this.getClass());
+            server = (AuctionSystem) Naming.lookup("rmi://130.209.245.90/AuctionSystemService");
+            //server = (AuctionSystem) Naming.lookup("rmi://localhost/AuctionSystemService");
             clientId = server.register(this);
         }
         // Catch the exceptions that may occur – bad URL, Remote exception
@@ -123,6 +123,19 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         }
     }
 
+    public boolean login(int id){
+        boolean success = false;
+        try{
+            success = server.login(id, this);
+            if (success){
+                this.clientId = id;
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+
 
     public static void main(String[] args) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", Locale.ENGLISH);
@@ -185,6 +198,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                     }catch(RemoteException e){
                         e.printStackTrace();
                     }
+                    break;
                 }
                 case "info":{
                     try {
@@ -194,6 +208,20 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                     }catch(NumberFormatException e){
                         System.out.println("Usage: info <auction ID>");
                     }
+                    break;
+                }
+                case "login":{
+                    try {
+                        int id = Integer.parseInt(command[1]);
+                        boolean success = client.login(id);
+                        if (success)
+                            System.out.println("You are now logged in as "+ id);
+                        else
+                            System.out.println("Operation unsuccessful.");
+                    }catch(Exception e){
+                        System.out.println("Usage: info <auction ID>");
+                    }
+                    break;
                 }
                 default: {
                     System.out.println("Type help to see the available commands.");

@@ -14,7 +14,8 @@ public class AuctionSystemServer {
         try {
             LocateRegistry.createRegistry(1099);
             AuctionSystem a = new AuctionSystemImpl("auctions.txt", "clients.txt");
-            Naming.rebind("rmi://localhost/AuctionSystemService", a);
+            //Naming.rebind("rmi://localhost/AuctionSystemService", a);
+            Naming.rebind("rmi://130.209.245.90/AuctionSystemService", a);
             System.out.println("Server Listening for connections...");
         } catch (Exception e) {
             System.out.println("Server Error: " + e);

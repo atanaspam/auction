@@ -47,7 +47,7 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
             }
         }
         sc.close();
-
+        /*
         try {
             oin = new ObjectInputStream(
                     new FileInputStream(auction));
@@ -152,7 +152,7 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
             return "Unable to find auction...";
         }else{
             return String.format("Auction: %d, Current price: %d, Owner: %d, Current winner: %d, End time: %s",
-            a.getId(), a.getCurrentPrice(), a.getOwner().getId(), a.getWinner(), sdf.format(a.getEndtime()));
+            a.getId(), a.getCurrentPrice(), a.getOwner().getId(), a.getWinner().getId(), sdf.format(a.getEndtime()));
         }
     }
 }
