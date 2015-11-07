@@ -90,12 +90,14 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
 
     @Override
     public int bid(int auctionId, int bidAmount, int clientId) throws RemoteException {
-        int result = -3;
+        int result = -4;
         if (clientPool.isRegistered(clientId)) {
             Client currentClient = clientPool.getClient(clientId);
             Auction target = auctionPool.getAuction(auctionId);
             if (target != null) {
                 result = target.bid(bidAmount, currentClient);
+            }else{
+                result = -3;
             }
         }
         return result;
@@ -134,9 +136,11 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
     }
 
     @Override
-    public boolean login(int id) throws RemoteException {
-        if (clientPool.isRegistered(id))
+    public boolean login(int id, AuctionSystemClient client) throws RemoteException {
+        if (clientPool.isRegistered(id)) {
+            clientPool.getClient(id).setClient(client);
             return true;
+        }
         else
             return false;
     }

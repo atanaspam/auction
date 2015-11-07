@@ -101,6 +101,28 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         return data;
     }
 
+    public String parseCode(int code){
+        switch (code){
+            case -4:{
+                return"Error during authentication.";
+            }
+            case -3:{
+                return "Auction not found or finished.";
+            }
+            case -2:{
+                return "Your price is lower than the auction's current price.";
+            }
+            case -1:{
+                return "Auction has already finished.";
+            }
+            case 0:{
+                return "Bid successfull.";
+            }
+            default:
+                return "";
+        }
+    }
+
 
     public static void main(String[] args) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", Locale.ENGLISH);
@@ -132,7 +154,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                         int auctionID = Integer.parseInt(command[1]);
                         int amount = Integer.parseInt(command[2]);
                         int result = client.bid(auctionID, amount);
-                        System.out.println(result);
+                        System.out.println(client.parseCode(result));
                     } catch (NumberFormatException e) {
                         System.out.println("Usage: bid <auction ID> <amount>");
                     }

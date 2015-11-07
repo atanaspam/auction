@@ -16,6 +16,6 @@ public interface AuctionSystem extends java.rmi.Remote {
     public int createNewAuction(Date endTime, int startingPrice, int clientId) throws java.rmi.RemoteException;
     public ArrayList<Integer> getAuctionList(int clientId) throws java.rmi.RemoteException;
     public int register(AuctionSystemClient client) throws java.rmi.RemoteException;
-    public boolean login(int clientId) throws java.rmi.RemoteException;
+    public boolean login(int clientId, AuctionSystemClient client) throws java.rmi.RemoteException;
     public String getAuctionInfo(int auctionId) throws java.rmi.RemoteException;
 }

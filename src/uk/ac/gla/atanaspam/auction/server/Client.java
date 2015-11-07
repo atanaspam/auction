@@ -23,6 +23,10 @@ public class Client implements java.io.Serializable{
         this.id = id;
     }
 
+    public void setClient(AuctionSystemClient client) {
+        this.client = client;
+    }
+
     public int getId() {
         return id;
     }
