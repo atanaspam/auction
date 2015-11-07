@@ -26,9 +26,13 @@ public class AuctionPoolMonitor extends Thread{
                 if(a.getEndtime().compareTo(new Date())<0){
                     pool.terminateAuction(a.getId());
                     try {
-                        a.getWinner().client.sendNotification("You have won Auction " + a.getId() + " for "+ a.getCurrentPrice());
-                        a.getOwner().client.sendNotification(a.getWinner().getId() + " has won Auction " + a.getId()
-                                + " for "+ a.getCurrentPrice());
+                        if (a.getWinner() == null){
+                            a.getOwner().client.sendNotification("Your auction "+ a.getId() + " finished without winners.");
+                        }else {
+                            a.getWinner().client.sendNotification("You have won Auction " + a.getId() + " for "+ a.getCurrentPrice());
+                            a.getOwner().client.sendNotification(a.getWinner().getId() + " has won Auction " + a.getId()
+                                    + " for " + a.getCurrentPrice());
+                        }
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }catch (NullPointerException e) {

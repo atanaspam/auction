@@ -168,7 +168,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                         int amount = Integer.parseInt(command[2]);
                         int result = client.bid(auctionID, amount);
                         System.out.println(client.parseCode(result));
-                    } catch (NumberFormatException e) {
+                    } catch (Exception e) {
                         System.out.println("Usage: bid <auction ID> <amount>");
                     }
                     break;
@@ -193,10 +193,10 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                         }
                     }catch(ParseException e){
                         System.out.println("Date must be of format: DD-MMM-YYYY HH:MM:SS. Example: 06 Nov 2015 18:00:00");
-                    }catch(NumberFormatException e){
-                        System.out.println("Usage: add <endTime> <amount>");
                     }catch(RemoteException e){
                         e.printStackTrace();
+                    }catch(Exception e){
+                        System.out.println("Usage: add <endTime> <amount>");
                     }
                     break;
                 }
@@ -205,7 +205,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                         int auctionID = Integer.parseInt(command[1]);
                         System.out.println(client.getAuctionInfo(auctionID));
 
-                    }catch(NumberFormatException e){
+                    }catch(Exception e){
                         System.out.println("Usage: info <auction ID>");
                     }
                     break;
