@@ -155,7 +155,7 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
                 return String.format("Auction: %d, Current price: %d, Owner: %d, Current winner: %d, End time: %s",
                         a.getId(), a.getCurrentPrice(), a.getOwner().getId(), a.getWinner().getId(), sdf.format(a.getEndtime()));
             }catch (NullPointerException e){
-                return String.format("Auction: %d, Current price: %d, Owner: %d, Current winner: %d, End time: %s",
+                return String.format("Auction: %d, Current price: %d, Owner: %d, Current winner: %s, End time: %s",
                         a.getId(), a.getCurrentPrice(), a.getOwner().getId(), "no winner yet", sdf.format(a.getEndtime()));
             }
         }
