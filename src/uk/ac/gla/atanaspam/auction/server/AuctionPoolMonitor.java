@@ -33,7 +33,7 @@ public class AuctionPoolMonitor extends Thread{
                             a.getOwner().client.sendNotification(a.getWinner().getId() + " has won Auction " + a.getId()
                                     + " for " + a.getCurrentPrice());
                         }
-                    }catch (java.net.ConnectException){
+                    }catch (java.rmi.ConnectException e){
                         System.out.println("Client has disconnected or cannot be reached");
                     }
                     catch (RemoteException e) {
