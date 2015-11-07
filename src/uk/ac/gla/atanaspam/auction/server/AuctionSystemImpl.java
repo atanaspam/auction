@@ -151,8 +151,13 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
         if (a == null){
             return "Unable to find auction...";
         }else{
-            return String.format("Auction: %d, Current price: %d, Owner: %d, Current winner: %d, End time: %s",
-            a.getId(), a.getCurrentPrice(), a.getOwner().getId(), a.getWinner().getId(), sdf.format(a.getEndtime()));
+            try {
+                return String.format("Auction: %d, Current price: %d, Owner: %d, Current winner: %d, End time: %s",
+                        a.getId(), a.getCurrentPrice(), a.getOwner().getId(), a.getWinner().getId(), sdf.format(a.getEndtime()));
+            }catch (NullPointerException e){
+                return String.format("Auction: %d, Current price: %d, Owner: %d, Current winner: %d, End time: %s",
+                        a.getId(), a.getCurrentPrice(), a.getOwner().getId(), "no winner yet", sdf.format(a.getEndtime()));
+            }
         }
     }
 }
