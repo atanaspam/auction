@@ -33,10 +33,13 @@ public class AuctionPoolMonitor extends Thread{
                             a.getOwner().client.sendNotification(a.getWinner().getId() + " has won Auction " + a.getId()
                                     + " for " + a.getCurrentPrice());
                         }
-                    } catch (RemoteException e) {
+                    }catch (java.net.ConnectException){
+                        System.out.println("Client has disconnected or cannot be reached");
+                    }
+                    catch (RemoteException e) {
                         e.printStackTrace();
                     }catch (NullPointerException e) {
-                        System.out.println("Client cannot be reached");
+                        System.out.println("Client does not exist (auction is manually imported into the server.)");
                         //System.out.println("Auction " + a.getId()+ " is now finished:"+ a.isFinished());
                     }
                 }

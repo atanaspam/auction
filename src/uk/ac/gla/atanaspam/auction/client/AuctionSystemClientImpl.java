@@ -149,6 +149,8 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         Scanner scanner = new Scanner(System.in);
         while(scanner.hasNext()) {
             String[] command = scanner.nextLine().split(" ");
+            if (command[0] == "logout" || command[0] == "exit")
+                break;
             switch (command[0]) {
                 case "help": {
                     System.out.println("auctions                    -to see a list of currently active auctions");
