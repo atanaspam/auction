@@ -71,7 +71,7 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        /*
+        */
         try {
             Auction a = new Auction(1, sdf.parse("01 Nov 2015 07:00:00"), sdf.parse("07 Nov 2015 16:27:00"), 100, clientPool.getClient(2), clientPool.getClient(1), false);
             auctionPool.addAuction(a);
@@ -85,7 +85,7 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        */
+
     }
 
     @Override

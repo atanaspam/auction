@@ -41,7 +41,7 @@ public class AuctionPool{
         nextId = id;
     }
 
-    public int addAuction(Date endDate, int price, Client owner){
+    public synchronized int addAuction(Date endDate, int price, Client owner){
         Auction a = new Auction(nextId++, new Date(), endDate, price, null, owner, false);
         auctions.add(a);
         return a.getId();

@@ -1,6 +1,5 @@
 package uk.ac.gla.atanaspam.auction.server;
 
-import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,17 +23,20 @@ public class AuctionPoolMonitor extends Thread{
             for (int i = 0; i<auctions.size(); i++){
                 Auction a = auctions.get(i);
                 if(a.getEndtime().compareTo(new Date())<0){
+                    //System.out.println(pool.getAuctions());
                     pool.terminateAuction(a.getId());
+                    i--; // if we remove an auction we go one index back as the whole arraylist gets shifted and we may miss an ended auction.
                     try {
                         if (a.getWinner() == null){
                             a.getOwner().client.sendNotification("Your auction "+ a.getId() + " finished without winners.");
                         }else {
-                            a.getWinner().client.sendNotification("You have won Auction " + a.getId() + " for "+ a.getCurrentPrice());
-                            a.getOwner().client.sendNotification(a.getWinner().getId() + " has won Auction " + a.getId()
+                            /*a.getOwner().client.sendNotification(a.getWinner().getId() + " has won Auction " + a.getId()
                                     + " for " + a.getCurrentPrice());
+                            a.getWinner().client.sendNotification("You have won Auction " + a.getId() + " for "+ a.getCurrentPrice());
+                            */
                         }
                     }catch (java.rmi.ConnectException e){
-                        System.out.println("Client has disconnected or cannot be reached");
+                        //System.out.println("Client has disconnected or cannot be reached");
                     }
                     catch (RemoteException e) {
                         e.printStackTrace();

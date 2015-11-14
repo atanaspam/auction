@@ -18,17 +18,12 @@ import java.util.*;
 public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject implements AuctionSystemClient{
 
     private AuctionSystem server;
-
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
-    }
-
     private int clientId;
 
     public AuctionSystemClientImpl() throws RemoteException{
         try {
-            server = (AuctionSystem) Naming.lookup("rmi://130.209.245.90/AuctionSystemService");
-            //server = (AuctionSystem) Naming.lookup("rmi://localhost/AuctionSystemService");
+            //server = (AuctionSystem) Naming.lookup("rmi://130.209.245.90/AuctionSystemService");
+            server = (AuctionSystem) Naming.lookup("rmi://localhost/AuctionSystemService");
             clientId = server.register(this);
         }
         // Catch the exceptions that may occur – bad URL, Remote exception
@@ -149,8 +144,10 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         Scanner scanner = new Scanner(System.in);
         while(scanner.hasNext()) {
             String[] command = scanner.nextLine().split(" ");
-            if (command[0] == "logout" || command[0] == "exit")
+            if (command[0].equals("logout") || command[0].equals("exit")) {
+                scanner.close();
                 break;
+            }
             switch (command[0]) {
                 case "help": {
                     System.out.println("auctions                    -to see a list of currently active auctions");
@@ -158,6 +155,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                     System.out.println("bid <auction ID> <amount>   -to vid for an auction");
                     System.out.println("add <endTime> <amount>      -to add a new auction (endTime format: DD-MMM-YYYY HH:MM:SS)");
                     System.out.println("info <auction ID>           -to view more info about a specific auction (includes finished auctions)");
+                    System.out.println("logout                      -to exit the application");
                     break;
                 }
                 case "id": {
@@ -232,7 +230,6 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
             }
 
         }
+
     }
-
-
 }
