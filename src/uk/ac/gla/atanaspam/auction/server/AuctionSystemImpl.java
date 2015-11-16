@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 /**
  * @author atanaspam
@@ -25,8 +26,9 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
     public AuctionSystemImpl() throws RemoteException {
         auctionPool = new AuctionPool();
         clientPool = new ClientPool();
+        sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss",Locale.ENGLISH);
     }
-
+    /*
     public AuctionSystemImpl(String auction, String client) throws RemoteException {
         sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss",Locale.ENGLISH);
         Scanner sc = null;
@@ -71,7 +73,7 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        */
+
         try {
             Auction a = new Auction(1, sdf.parse("01 Nov 2015 07:00:00"), sdf.parse("07 Nov 2015 16:27:00"), 100, clientPool.getClient(2), clientPool.getClient(1), false);
             auctionPool.addAuction(a);
@@ -87,6 +89,7 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
         }
 
     }
+    */
 
     @Override
     public int bid(int auctionId, int bidAmount, int clientId) throws RemoteException {
@@ -105,14 +108,13 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
 
     @Override
     public int createNewAuction(Date endTime, int startPrice, int clientId) throws RemoteException {
-        Client c = clientPool.getClient(clientId);
-        try {
-            if (c == null) throw new NoSuchClientException(clientId);
+        if (endTime.compareTo(new Date())<0)
+            return -2;
+        else {
+            Client c = clientPool.getClient(clientId);
+            if (c == null) return -1;
             int id = auctionPool.addAuction(endTime, startPrice, c);
             return id;
-        }
-        catch (NoSuchClientException e){
-            return -1;
         }
     }
 
@@ -157,7 +159,43 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
             }catch (NullPointerException e){
                 return String.format("Auction: %d, Current price: %d, Owner: %d, Current winner: %s, End time: %s",
                         a.getId(), a.getCurrentPrice(), a.getOwner().getId(), "no winner yet", sdf.format(a.getEndtime()));
+
             }
         }
+    }
+
+    public boolean writeAuctionsToFile(){
+        if(auctionPool.writeToFile("auctions.txt"))
+            return true;
+        else
+            return false;
+    }
+
+    public boolean readAuctionsFromFile(String filename) throws FileNotFoundException{
+        ObjectInputStream oin;
+        try {
+            oin = new ObjectInputStream(
+                    new FileInputStream(filename));
+            Object ob = oin.readObject();
+            ArrayList<?> list = (ArrayList<?>) ob;
+            for (Object o : list){
+                if (o instanceof Auction){
+                    Auction a = (Auction) o;
+                    if(a.isFinished()){
+                        auctionPool.addFinished(a);
+                    }else {
+                        auctionPool.addAuction(a);
+                    }
+                    System.out.println("Imported: "+ a);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

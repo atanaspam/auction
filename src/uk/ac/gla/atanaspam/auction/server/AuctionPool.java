@@ -95,7 +95,7 @@ public class AuctionPool{
         return false;
     }
 
-    public void writeToFile(String file){
+    public boolean writeToFile(String file){
         try {
             FileOutputStream fileOut = new FileOutputStream("auctions.txt");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -104,8 +104,9 @@ public class AuctionPool{
             out.close();
             fileOut.close();
         }catch (IOException e) {
-            System.out.println("Error when writing to file");
+            return false;
         }
+        return true;
     }
 
     public void addFinished(Auction a){

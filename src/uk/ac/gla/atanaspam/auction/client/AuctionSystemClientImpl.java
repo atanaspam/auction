@@ -131,6 +131,17 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         return success;
     }
 
+    private String getHelp(){
+        StringBuilder s = new StringBuilder();
+        s.append("auctions                    -to see a list of currently active auctions\n");
+        s.append("id                          -to see your client id\n");
+        s.append("bid <auction ID> <amount>   -to vid for an auction\n");
+        s.append("add <endTime> <amount>      -to add a new auction (endTime format: DD-MMM-YYYY HH:MM:SS)\n");
+        s.append("info <auction ID>           -to view more info about a specific auction (includes finished auctions)\n");
+        s.append("logout                      -to exit the application\n");
+        return s.toString();
+    }
+
 
     public static void main(String[] args) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", Locale.ENGLISH);
@@ -141,21 +152,17 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         } catch (RemoteException e) {
             System.out.println("Unable to connect to server...");
         }
+        System.out.println(client.getHelp());
         Scanner scanner = new Scanner(System.in);
         while(scanner.hasNext()) {
             String[] command = scanner.nextLine().split(" ");
             if (command[0].equals("logout") || command[0].equals("exit")) {
                 scanner.close();
-                break;
+                System.exit(0);
             }
             switch (command[0]) {
                 case "help": {
-                    System.out.println("auctions                    -to see a list of currently active auctions");
-                    System.out.println("id                          -to see your client id");
-                    System.out.println("bid <auction ID> <amount>   -to vid for an auction");
-                    System.out.println("add <endTime> <amount>      -to add a new auction (endTime format: DD-MMM-YYYY HH:MM:SS)");
-                    System.out.println("info <auction ID>           -to view more info about a specific auction (includes finished auctions)");
-                    System.out.println("logout                      -to exit the application");
+                    System.out.println(client.getHelp());
                     break;
                 }
                 case "id": {
@@ -188,9 +195,8 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                         int result = client.createNewAuction(endDate, amount);
                         if (result == -1) {
                             System.out.println("A problem occured during identification, try logging in again...");
-                        }else{
-                            System.out.println("The id of your new auction is: " + result);
-                        }
+                        }else if(result == -2){ System.out.println("The begin date cannot be in the past.");}
+                        else{ System.out.println("The id of your new auction is: " + result); }
                     }catch(ParseException e){
                         System.out.println("Date must be of format: DD-MMM-YYYY HH:MM:SS. Example: 06 Nov 2015 18:00:00");
                     }catch(RemoteException e){
@@ -206,6 +212,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                         System.out.println(client.getAuctionInfo(auctionID));
 
                     }catch(Exception e){
+                        e.printStackTrace();
                         System.out.println("Usage: info <auction ID>");
                     }
                     break;

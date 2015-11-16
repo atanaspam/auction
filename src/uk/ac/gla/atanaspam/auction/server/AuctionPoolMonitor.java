@@ -30,10 +30,11 @@ public class AuctionPoolMonitor extends Thread{
                         if (a.getWinner() == null){
                             a.getOwner().client.sendNotification("Your auction "+ a.getId() + " finished without winners.");
                         }else {
-                            /*a.getOwner().client.sendNotification(a.getWinner().getId() + " has won Auction " + a.getId()
+                            a.getOwner().client.sendNotification(a.getWinner().getId() + " has won Auction " + a.getId()
                                     + " for " + a.getCurrentPrice());
                             a.getWinner().client.sendNotification("You have won Auction " + a.getId() + " for "+ a.getCurrentPrice());
-                            */
+                            for (Client c : a.getBidders())
+                                c.client.sendNotification("You have lost Auction " + a.getId() + ". Winning price: "+ a.getCurrentPrice());
                         }
                     }catch (java.rmi.ConnectException e){
                         //System.out.println("Client has disconnected or cannot be reached");

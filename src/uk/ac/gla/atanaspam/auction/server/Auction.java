@@ -42,6 +42,9 @@ public class Auction implements Serializable{
         return winner;
     }
 
+    public ArrayList<Client> getBidders() {
+        return bidders;
+    }
     public void setCurrentPrice(int currentPrice) {
         this.currentPrice = currentPrice;
     }
@@ -52,37 +55,6 @@ public class Auction implements Serializable{
         }
         this.winner = winner;
 
-    }
-
-    public synchronized int bid(int newPrice, Client bidder){
-        if (this.getEndtime().compareTo(new Date()) > 0) {
-            if (this.getCurrentPrice() < newPrice) {
-                this.setCurrentPrice(newPrice);
-                this.setWinner(bidder);
-
-                System.out.println("Auction " + this.getId() +
-                        " has new winnig price: " + newPrice +
-                        " from " + this.getWinner());
-
-                return 0;
-            }else{
-                return -2;
-            }
-        }else {
-            return -1;
-        }
-    }
-
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
-    }
-
-    public Client getOwner() {
-        return owner;
     }
 
     public Auction(int id, Date begintime, Date endtime, int currentPrice, Client winner, Client owner, boolean finished) {
@@ -104,6 +76,41 @@ public class Auction implements Serializable{
         this.owner = owner;
         this.finished = false;
         this.bidders = new ArrayList<>();
+    }
+
+    public synchronized int bid(int newPrice, Client bidder){
+        if (this.getEndtime().compareTo(new Date()) > 0) {
+            if (this.getCurrentPrice() < newPrice) {
+                this.setCurrentPrice(newPrice);
+
+                this.setWinner(bidder);
+                System.out.println("Auction " + this.getId() +
+                        " has new winnig price: " + newPrice +
+                        " from " + this.getWinner());
+
+                return 0;
+            }else{
+                return -2;
+            }
+        }else {
+            return -1;
+        }
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
+    }
+
+    public Client getOwner() {
+        return owner;
     }
 
     @Override
