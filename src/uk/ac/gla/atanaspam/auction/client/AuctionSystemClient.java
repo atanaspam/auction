@@ -1,8 +1,8 @@
 package uk.ac.gla.atanaspam.auction.client;
 
 /**
+ * This interface defines the methods available to the Auction System Server for invocation.
  * @author atanaspam
- * @version 0.1
  * @created 04/11/2015
  */
 public interface AuctionSystemClient extends java.rmi.Remote{

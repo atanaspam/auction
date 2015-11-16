@@ -7,14 +7,16 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
+ * This class manages all the auctions in the system. The AuctionSystem could have been implemented without a separate
+ * class for this but I find it better to split this functionality in a different class.
  * @author atanaspam
- * @version 0.1
  * @created 03/11/2015
  */
 public class AuctionPool{
 
     private ArrayList<Auction> auctions;
     private ArrayList<Auction> finished;
+    /** @see AuctionPoolMonitor  */
     private AuctionPoolMonitor monitor;
     private int nextId;
 
@@ -26,29 +28,62 @@ public class AuctionPool{
         monitor.start();
     }
 
+    public ArrayList<Auction> getAuctions(){
+        return this.auctions;
+    }
+
+    /**
+     * This method when Auctions are imported from a file.
+     * It also has to take care that no auction is imported with an already existing Auction ID.
+     * @param a the Auction object to be added.
+     */
     public void addAuction(Auction a){
         auctions.add(a);
         if (a.getId() > this.nextId)
             nextId = a.getId()+1;
+        else{
+            a.setId(nextId++);
+        }
     }
 
-    public void addAuction(Date beginTime, Date endTime, int price, Client winner, Client owner, boolean finished){
-        auctions.add(new Auction(nextId++,beginTime, endTime, price, winner, owner, finished));
+    public ArrayList<Integer> getAuctionIDs(){
+        ArrayList<Integer> ids = new ArrayList<>();
+        for (Auction a : auctions) {
+            ids.add(a.getId());
+        }
+        return ids;
     }
 
-    public void addAuction(int id, Date beginTime, Date endTime, int price, Client winner, Client owner, boolean finished){
-        auctions.add(new Auction(id,beginTime, endTime, price, winner, owner, finished));
+    /**
+     *@deprecated
+     */
+    public void addAuction(String name, Date beginTime, Date endTime, int price, Client winner, Client owner, boolean finished){
+        auctions.add(new Auction(nextId++, name, beginTime, endTime, price, winner, owner, finished));
+    }
+
+    /**
+     *@deprecated
+     */
+    public void addAuction(int id, String name, Date beginTime, Date endTime, int price, Client winner, Client owner, boolean finished){
+        auctions.add(new Auction(id, name, beginTime, endTime, price, winner, owner, finished));
         nextId = id;
     }
 
-    public synchronized int addAuction(Date endDate, int price, Client owner){
-        Auction a = new Auction(nextId++, new Date(), endDate, price, null, owner, false);
+    /**
+     * This method is called by the Auction System Implementation
+     */
+    public synchronized int addAuction(String name, Date endDate, int price, Client owner){
+        Auction a = new Auction(nextId++, name, new Date(), endDate, price, null, owner, false);
         auctions.add(a);
         return a.getId();
     }
 
 
-
+    /**
+     * This method searches the currently active auctions for a specific auction.
+     * @param id The ID of the auction we need.
+     * @return The Auction or null if it doesnt exist.
+     */
     public Auction getAuction(int id){
         for(Auction a : auctions){
             if (a.getId() == id){
@@ -58,7 +93,12 @@ public class AuctionPool{
         return null;
     }
 
-    public Auction getAllAuctions(int id){
+    /**
+     * This method traverses all the auctions (Finished and Not-finished)
+     * @param id The ID of the auction we need.
+     * @return The Auction or null if it doesnt exist.
+     */
+    public Auction getFromAllAuctions(int id){
         ArrayList<Auction> all = new ArrayList<>();
         all.addAll(auctions);
         all.addAll(finished);
@@ -79,10 +119,6 @@ public class AuctionPool{
         return false;
     }
 
-    public ArrayList<Auction> getAuctions(){
-        return this.auctions;
-    }
-
     public synchronized boolean terminateAuction(int id){
         for(Auction a : auctions){
             if (a.getId() == id){
@@ -95,6 +131,11 @@ public class AuctionPool{
         return false;
     }
 
+    /**
+     * This method is called by the Auction System Implementation to write the currently active auctions to a file
+     * @param file The name/path of the file
+     * @return True if the write succeed, False otherwise.
+     */
     public boolean writeToFile(String file){
         try {
             FileOutputStream fileOut = new FileOutputStream("auctions.txt");
@@ -109,6 +150,10 @@ public class AuctionPool{
         return true;
     }
 
+    /**
+     * Add an auction to the list of finished auctions.
+     * @param a The auction
+     */
     public void addFinished(Auction a){
         this.finished.add(a);
     }

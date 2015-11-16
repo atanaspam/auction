@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
+ * This class represents a single auction in the AuctionSystem.
  * @author atanaspam
- * @version 0.1
  * @created 02/11/2015
  */
 public class Auction implements Serializable{
 
-    //private final SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss",Locale.ENGLISH);
-
     private int id;
+    private String name;
     private Date begintime;
     private Date endtime;
     private int currentPrice;
@@ -57,52 +56,12 @@ public class Auction implements Serializable{
 
     }
 
-    public Auction(int id, Date begintime, Date endtime, int currentPrice, Client winner, Client owner, boolean finished) {
-        this.id = id;
-        this.endtime = endtime;
-        this.begintime = begintime;
-        this.currentPrice = currentPrice;
-        this.winner = winner;
-        this.owner = owner;
-        this.finished = finished;
-        this.bidders = new ArrayList<>();
-    }
-
-    public Auction(int id, Date begintime, Date endtime, int currentPrice, Client owner) {
-        this.id = id;
-        this.begintime = begintime;
-        this.endtime = endtime;
-        this.currentPrice = currentPrice;
-        this.owner = owner;
-        this.finished = false;
-        this.bidders = new ArrayList<>();
-    }
-
-    public synchronized int bid(int newPrice, Client bidder){
-        if (this.getEndtime().compareTo(new Date()) > 0) {
-            if (this.getCurrentPrice() < newPrice) {
-                this.setCurrentPrice(newPrice);
-
-                this.setWinner(bidder);
-                System.out.println("Auction " + this.getId() +
-                        " has new winnig price: " + newPrice +
-                        " from " + this.getWinner());
-
-                return 0;
-            }else{
-                return -2;
-            }
-        }else {
-            return -1;
-        }
+    public String getName() {
+        return name;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public boolean isFinished() {
-        return finished;
     }
 
     public void setFinished(boolean finished) {
@@ -113,9 +72,66 @@ public class Auction implements Serializable{
         return owner;
     }
 
+    /**
+     * A raw constructor
+     */
+    public Auction(int id,String name, Date begintime, Date endtime, int currentPrice, Client winner, Client owner, boolean finished) {
+        this.id = id;
+        this.name = name;
+        this.endtime = endtime;
+        this.begintime = begintime;
+        this.currentPrice = currentPrice;
+        this.winner = winner;
+        this.owner = owner;
+        this.finished = finished;
+        this.bidders = new ArrayList<>();
+    }
+
+    /**
+     * A simpler constructor used by import methods
+     * @deprecated
+     */
+    public Auction(int id, Date begintime, Date endtime, int currentPrice, Client owner) {
+        this.id = id;
+        this.begintime = begintime;
+        this.endtime = endtime;
+        this.currentPrice = currentPrice;
+        this.owner = owner;
+        this.finished = false;
+        this.bidders = new ArrayList<>();
+    }
+
+    /**
+     * This method is called by the AuctionPool when a client wants to bid on this auction.
+     * @param newPrice The new price to be set
+     * @param bidder The Client instance for that bidder.
+     * @return 0 if bid is successfull, -1 if auction has already ended, -2 if the new price is lower than the current.
+     */
+    public synchronized int bid(int newPrice, Client bidder){
+        if (this.getEndtime().compareTo(new Date()) > 0) {
+            if (this.getCurrentPrice() < newPrice) {
+                this.setCurrentPrice(newPrice);
+                this.setWinner(bidder);
+                //TODO log instead of print
+                System.out.println("Auction " + this.getId() +
+                        " has new winnig price: " + newPrice +
+                        " from " + this.getWinner());
+                return 0;
+            }else{ return -2; }
+        }else { return -1; }
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    /**
+     * Standard String representation used for debugging.
+     */
     @Override
     public String toString() {
         return "id: " + id +
+                ", name: " + name +
                 ", begintime: " + begintime +
                 ", endtime: " + endtime +
                 ", currentPrice: " + currentPrice +

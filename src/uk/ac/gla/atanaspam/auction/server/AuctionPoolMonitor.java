@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
+ * This class is a total overkill but its main task is to monitor the list of currently active auctions and remove
+ * auctions if they have finished. It does that every 10000 ms. It is also responsible for sending callbacks.
  * @author atanaspam
- * @version 0.1
  * @created 03/11/2015
  */
 public class AuctionPoolMonitor extends Thread{
@@ -23,7 +24,6 @@ public class AuctionPoolMonitor extends Thread{
             for (int i = 0; i<auctions.size(); i++){
                 Auction a = auctions.get(i);
                 if(a.getEndtime().compareTo(new Date())<0){
-                    //System.out.println(pool.getAuctions());
                     pool.terminateAuction(a.getId());
                     i--; // if we remove an auction we go one index back as the whole arraylist gets shifted and we may miss an ended auction.
                     try {
@@ -37,13 +37,14 @@ public class AuctionPoolMonitor extends Thread{
                                 c.client.sendNotification("You have lost Auction " + a.getId() + ". Winning price: "+ a.getCurrentPrice());
                         }
                     }catch (java.rmi.ConnectException e){
+                        //TODO LOG instead of print
                         //System.out.println("Client has disconnected or cannot be reached");
                     }
                     catch (RemoteException e) {
                         e.printStackTrace();
                     }catch (NullPointerException e) {
+                        //TODO LOG instead of print
                         System.out.println("Client does not exist (auction is manually imported into the server.)");
-                        //System.out.println("Auction " + a.getId()+ " is now finished:"+ a.isFinished());
                     }
                 }
             }

@@ -1,13 +1,13 @@
 package uk.ac.gla.atanaspam.auction.server;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 import java.util.Scanner;
 
 /**
  * @author atanaspam
- * @version 0.1
  * @created 02/11/2015
  */
 public class AuctionSystemServer {
@@ -27,6 +27,7 @@ public class AuctionSystemServer {
 
     public static void main(String args[]) {
         AuctionSystemServer as = new AuctionSystemServer();
+        System.out.println("Available commands: help, load <filename>, save ");
         AuctionSystemImpl asi = (AuctionSystemImpl) as.a;
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNext()) {
@@ -40,10 +41,12 @@ public class AuctionSystemServer {
                     try {
                         String filename = command[1];
                         if (!asi.readAuctionsFromFile(filename))
-                            System.out.println("An error has occurred.");
+                            System.out.println("Unable to find file...");
+                        else
+                            System.out.println("Success.");
                         break;
-                    } catch (FileNotFoundException e) {
-                        System.out.println("Unable to find file...");
+                    } catch (IOException e) {
+                        System.out.println("An error has occurred.");
                     } catch (Exception e) {
                         System.out.println("Usage: load <filename>");
                     }
@@ -55,6 +58,14 @@ public class AuctionSystemServer {
                     }
                     else
                         System.out.println("An error has occured while trying to save to file.");
+                }
+                case "help": {
+                    System.out.println("load <filename>             -To load auctions from a file");
+                    System.out.println("save                        -To save auctions to a file.");
+                    System.out.println("help                        -To see a list of available commands.");
+                }
+                default:{
+                    System.out.println("Type help to see a list of available commands.");
                 }
             }
         }

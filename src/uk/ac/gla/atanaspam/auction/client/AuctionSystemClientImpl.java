@@ -11,8 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ * This class represents an Auction System client and implements all of its methods.
  * @author atanaspam
- * @version 0.1
  * @created 02/11/2015
  */
 public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject implements AuctionSystemClient{
@@ -26,22 +26,16 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
             server = (AuctionSystem) Naming.lookup("rmi://localhost/AuctionSystemService");
             clientId = server.register(this);
         }
-        // Catch the exceptions that may occur – bad URL, Remote exception
-        // Not bound exception or the arithmetic exception that may occur in
-        // one of the methods creates an arithmetic error (e.g. divide by zero)
         catch (MalformedURLException murle) {
             System.out.println("MalformedURLException");
             System.out.println(murle);
-        }
-        catch (RemoteException re) {
+        } catch (RemoteException re) {
             System.out.println("RemoteException");
             System.out.println(re);
-        }
-        catch (NotBoundException nbe) {
+        } catch (NotBoundException nbe) {
             System.out.println("NotBoundException");
             System.out.println(nbe);
-        }
-        catch (java.lang.ArithmeticException ae) {
+        } catch (java.lang.ArithmeticException ae) {
             System.out.println("java.lang.ArithmeticException");
             System.out.println(ae);
         }
@@ -52,20 +46,28 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         return server;
     }
 
-    public int getClientId() {
-        return clientId;
-    }
-
+    /**
+     * This method is called by the Auction System Server in order to deliver a string message to the Client.
+     * @param s The string to be delivered.
+     * @return True if the message has been delivered.
+     * @throws RemoteException
+     */
     @Override
     public boolean sendNotification(String s) throws RemoteException {
         System.out.println(s);
         return true;
     }
 
+    /**
+     * This method is used by the Auction System Server to check if the client is still active and connected.
+     * @return True if active
+     * @throws RemoteException if not Active
+     */
     @Override
     public boolean ping() throws RemoteException {
         return true;
     }
+
 
     public int bid(int auctionId, int price){
         int result = -4;
@@ -77,8 +79,8 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         return result;
     }
 
-    public int createNewAuction(Date endTime, int startPrice) throws RemoteException {
-       int result = server.createNewAuction(endTime, startPrice, clientId);
+    public int createNewAuction(String name, Date endTime, int startPrice) throws RemoteException {
+       int result = server.createNewAuction(name, endTime, startPrice, clientId);
         return result;
     }
 
@@ -135,10 +137,10 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         StringBuilder s = new StringBuilder();
         s.append("auctions                    -to see a list of currently active auctions\n");
         s.append("id                          -to see your client id\n");
-        s.append("bid <auction ID> <amount>   -to vid for an auction\n");
-        s.append("add <endTime> <amount>      -to add a new auction (endTime format: DD-MMM-YYYY HH:MM:SS)\n");
+        s.append("bid <auction ID> <amount>   -to bid for an auction\n");
+        s.append("add <name> <endTime> <amount>      -to add a new auction (endTime format: DD-MMM-YYYY HH:MM:SS)\n");
         s.append("info <auction ID>           -to view more info about a specific auction (includes finished auctions)\n");
-        s.append("logout                      -to exit the application\n");
+        s.append("exit                      -to exit the application\n");
         return s.toString();
     }
 
@@ -152,7 +154,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
         } catch (RemoteException e) {
             System.out.println("Unable to connect to server...");
         }
-        System.out.println(client.getHelp());
+        System.out.println("Available commands: auctions, id, bid <auction ID> <amount>, add <name> <endTime> <amount>, info <auction ID>, exit");
         Scanner scanner = new Scanner(System.in);
         while(scanner.hasNext()) {
             String[] command = scanner.nextLine().split(" ");
@@ -190,11 +192,14 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                 }
                 case "add":{
                     try {
-                        Date endDate = sdf.parse(command[1] + " " + command[2]);
-                        int amount = Integer.parseInt(command[3]);
-                        int result = client.createNewAuction(endDate, amount);
+                        String name = command[1];
+                        if (name.equals(""))
+                                System.out.println("name cannot be empty.");
+                        Date endDate = sdf.parse(command[2] + " " + command[3]);
+                        int amount = Integer.parseInt(command[4]);
+                        int result = client.createNewAuction(name, endDate, amount);
                         if (result == -1) {
-                            System.out.println("A problem occured during identification, try logging in again...");
+                            System.out.println("A problem occurred during identification, try logging in again...");
                         }else if(result == -2){ System.out.println("The begin date cannot be in the past.");}
                         else{ System.out.println("The id of your new auction is: " + result); }
                     }catch(ParseException e){
@@ -202,7 +207,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                     }catch(RemoteException e){
                         e.printStackTrace();
                     }catch(Exception e){
-                        System.out.println("Usage: add <endTime> <amount>");
+                        System.out.println("Usage: add <name> <endTime> <amount>");
                     }
                     break;
                 }

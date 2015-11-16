@@ -3,8 +3,8 @@ package uk.ac.gla.atanaspam.auction.server;
 import uk.ac.gla.atanaspam.auction.client.AuctionSystemClient;
 
 /**
+ * This class represents a single client's details within the Auction Server.
  * @author atanaspam
- * @version 0.1
  * @created 02/11/2015
  */
 public class Client implements java.io.Serializable{
