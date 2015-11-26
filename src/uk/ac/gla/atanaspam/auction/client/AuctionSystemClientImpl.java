@@ -149,7 +149,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
     public static void main(String[] args) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", Locale.ENGLISH);
         AuctionSystemClientImpl client = null;
-        if(args[0] == null|| args[0].equals("")){
+        if(( args.length == 0 )|| (args[0].equals(""))){
             System.out.println("Please provide the ip address of the server as an argument.");
             System.exit(1);
         }

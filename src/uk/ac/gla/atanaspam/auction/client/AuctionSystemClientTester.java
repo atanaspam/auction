@@ -15,7 +15,7 @@ public class AuctionSystemClientTester {
 
     public static void main (String[] args){
         String ip = "";
-        if(args[0] == null|| args[0].equals("")){
+        if((args.length == 0)|| (args[0].equals(""))){
             System.out.println("Please provide the ip address of the server as an argument.");
             System.exit(1);
         }
