@@ -1,6 +1,6 @@
-package uk.ac.gla.atanaspam.auction.server;
+package uk.ac.gla.atanaspam.auction.interfaces;
 
-import uk.ac.gla.atanaspam.auction.client.AuctionSystemClient;
+import uk.ac.gla.atanaspam.auction.interfaces.AuctionSystemClient;
 
 import java.util.ArrayList;
 import java.util.Date;

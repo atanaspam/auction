@@ -1,6 +1,7 @@
 package uk.ac.gla.atanaspam.auction.server;
 
-import java.io.FileNotFoundException;
+import uk.ac.gla.atanaspam.auction.interfaces.AuctionSystem;
+
 import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;

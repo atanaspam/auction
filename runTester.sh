@@ -1,0 +1,1 @@
+java -classpath out/ uk.ac.gla.atanaspam.auction.client.AuctionSystemClientTester

@@ -1,6 +1,6 @@
 package uk.ac.gla.atanaspam.auction.server;
 
-import uk.ac.gla.atanaspam.auction.client.AuctionSystemClient;
+import uk.ac.gla.atanaspam.auction.interfaces.AuctionSystemClient;
 
 /**
  * This class represents a single client's details within the Auction Server.

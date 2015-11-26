@@ -1,6 +1,7 @@
 package uk.ac.gla.atanaspam.auction.server;
 
-import uk.ac.gla.atanaspam.auction.client.AuctionSystemClient;
+import uk.ac.gla.atanaspam.auction.interfaces.AuctionSystem;
+import uk.ac.gla.atanaspam.auction.interfaces.AuctionSystemClient;
 
 import java.io.*;
 import java.rmi.RemoteException;

@@ -1,4 +1,4 @@
-package uk.ac.gla.atanaspam.auction.client;
+package uk.ac.gla.atanaspam.auction.interfaces;
 
 /**
  * This interface defines the methods available to the Auction System Server for invocation.

@@ -1,7 +1,8 @@
 package uk.ac.gla.atanaspam.auction.client;
 
 
-import uk.ac.gla.atanaspam.auction.server.AuctionSystem;
+import uk.ac.gla.atanaspam.auction.interfaces.AuctionSystemClient;
+import uk.ac.gla.atanaspam.auction.interfaces.AuctionSystem;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.net.MalformedURLException;
@@ -15,7 +16,7 @@ import java.util.*;
  * @author atanaspam
  * @created 02/11/2015
  */
-public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject implements AuctionSystemClient{
+public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject implements AuctionSystemClient {
 
     private AuctionSystem server;
     private int clientId;
