@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 /**
  * This class manages all the auctions in the system. The AuctionSystem could have been implemented without a separate
@@ -85,7 +86,9 @@ public class AuctionPool{
      * @return The Auction or null if it doesnt exist.
      */
     public Auction getAuction(int id){
-        for(Auction a : auctions){
+        ArrayList<Auction> auctions =new ArrayList<>();
+        for(int i = 0; i< auctions.size(); i++){
+            Auction a = auctions.get(i);
             if (a.getId() == id){
                 return a;
             }
@@ -111,7 +114,7 @@ public class AuctionPool{
     }
 
     public boolean exists(int id){
-        for(Auction a : auctions){
+        for(Auction a : this.getAuctions()){
             if (a.getId() == id){
                 return true;
             }
@@ -120,13 +123,16 @@ public class AuctionPool{
     }
 
     public synchronized boolean terminateAuction(int id){
-        for(Auction a : auctions){
-            if (a.getId() == id){
-                a.setFinished(true);
+        Iterator<Auction> iter = this.getAuctions().iterator();
+
+        while (iter.hasNext()) {
+            Auction a = iter.next();
+            if (a.getId() == id) {
                 finished.add(a);
-                auctions.remove(a);
+                iter.remove();
                 return true;
             }
+//        
         }
         return false;
     }

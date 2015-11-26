@@ -15,8 +15,9 @@ public class AuctionSystemClientTester {
 
     public static void main (String[] args){
         String ip = "";
-        if((args.length == 0)|| (args[0].equals(""))){
-            System.out.println("Please provide the ip address of the server as an argument.");
+        if((args.length != 2)|| (args[0].equals(""))){
+            System.out.println("Please provide the ip address of the server as an argument and the mode (1-5).");
+             System.out.println("Example: ./runTester localhost 1");
             System.exit(1);
         }
         AuctionSystemClientImpl client = null;
@@ -26,6 +27,11 @@ public class AuctionSystemClientTester {
 
         } catch (RemoteException e) {
             System.out.println("Unable to connect to server...");
+            System.exit(1);
+        }
+        if (client == null){
+            System.out.println("An error has occurred. Now quiting.");
+            System.exit(1);
         }
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", Locale.ENGLISH);
         Date d = null;
@@ -38,7 +44,7 @@ public class AuctionSystemClientTester {
         try {
             long startTime = 0;
             long elapsedTime = 0;
-            switch (args[0]){
+            switch (args[1]){
                 case "1":{
                     startTime = System.currentTimeMillis();
                     int n = 1;
