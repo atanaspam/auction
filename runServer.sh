@@ -1,1 +1,1 @@
-java -classpath out/ uk.ac.gla.atanaspam.auction.server.AuctionSystemServer
+java -classpath out/ uk.ac.gla.atanaspam.auction.server.AuctionSystemServer $1
