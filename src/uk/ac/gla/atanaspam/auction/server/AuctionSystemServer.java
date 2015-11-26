@@ -14,12 +14,12 @@ import java.util.Scanner;
 public class AuctionSystemServer {
 
     AuctionSystem a;
-    public AuctionSystemServer(){
+    public AuctionSystemServer(String ip){
         try {
             LocateRegistry.createRegistry(1099);
             a = new AuctionSystemImpl();
-            Naming.rebind("rmi://localhost/AuctionSystemService", a);
-            //Naming.rebind("rmi://130.209.245.90/AuctionSystemService", a);
+            //Naming.rebind("rmi://localhost/AuctionSystemService", a);
+            Naming.rebind("rmi://"+ip+"/AuctionSystemService", a);
             System.out.println("Server Listening for connections...");
         } catch (Exception e) {
             System.out.println("Server Error: " + e);
@@ -27,7 +27,11 @@ public class AuctionSystemServer {
     }
 
     public static void main(String args[]) {
-        AuctionSystemServer as = new AuctionSystemServer();
+        if(args[0] == null|| args[0].equals("")){
+            System.out.println("Please provide the current ip address or 'localhost' as an argument.");
+            System.exit(1);
+        }
+        AuctionSystemServer as = new AuctionSystemServer(args[0]);
         System.out.println("Available commands: help, load <filename>, save ");
         AuctionSystemImpl asi = (AuctionSystemImpl) as.a;
         Scanner scanner = new Scanner(System.in);

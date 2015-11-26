@@ -21,10 +21,10 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
     private AuctionSystem server;
     private int clientId;
 
-    public AuctionSystemClientImpl() throws RemoteException{
+    public AuctionSystemClientImpl(String ip) throws RemoteException{
         try {
-            //server = (AuctionSystem) Naming.lookup("rmi://130.209.245.90/AuctionSystemService");
-            server = (AuctionSystem) Naming.lookup("rmi://localhost/AuctionSystemService");
+            server = (AuctionSystem) Naming.lookup("rmi://"+ip+"/AuctionSystemService");
+            //server = (AuctionSystem) Naming.lookup("rmi://localhost/AuctionSystemService");
             clientId = server.register(this);
         }
         catch (MalformedURLException murle) {
@@ -149,8 +149,12 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
     public static void main(String[] args) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss", Locale.ENGLISH);
         AuctionSystemClientImpl client = null;
+        if(args[0] == null|| args[0].equals("")){
+            System.out.println("Please provide the ip address of the server as an argument.");
+            System.exit(1);
+        }
         try {
-            client = new AuctionSystemClientImpl();
+            client = new AuctionSystemClientImpl(args[0]);
 
         } catch (RemoteException e) {
             System.out.println("Unable to connect to server...");

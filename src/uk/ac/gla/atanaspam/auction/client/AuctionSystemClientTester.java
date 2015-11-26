@@ -14,10 +14,15 @@ import java.util.Locale;
 public class AuctionSystemClientTester {
 
     public static void main (String[] args){
-
+        String ip = "";
+        if(args[0] == null|| args[0].equals("")){
+            System.out.println("Please provide the ip address of the server as an argument.");
+            System.exit(1);
+        }
         AuctionSystemClientImpl client = null;
         try {
-            client = new AuctionSystemClientImpl();
+            client = new AuctionSystemClientImpl(args[0]);
+            ip = args[0];
 
         } catch (RemoteException e) {
             System.out.println("Unable to connect to server...");
@@ -53,8 +58,8 @@ public class AuctionSystemClientTester {
                 }
                 case "3":{
                     startTime = System.currentTimeMillis();
-                    Thread t1 = testCreate(d, 5000);
-                    Thread t2 = testCreate(d, 5000);
+                    Thread t1 = testCreate(d, 5000, ip);
+                    Thread t2 = testCreate(d, 5000, ip);
                     t1.start();
                     t2.start();
                     t2.join();
@@ -62,8 +67,8 @@ public class AuctionSystemClientTester {
                 }
                 case "4":{
                     startTime = System.currentTimeMillis();
-                    Thread t1 = testBid(d, 5000);
-                    Thread t2 = testBid(d, 5000);
+                    Thread t1 = testBid(d, 5000, ip);
+                    Thread t2 = testBid(d, 5000, ip);
                     t1.start();
                     t2.start();
                     t2.join();
@@ -72,8 +77,8 @@ public class AuctionSystemClientTester {
 
                 case "5":{
                     startTime = System.currentTimeMillis();
-                    Thread t1 = testCreate(d, 5000);
-                    Thread t2 = testBid(d, 5000);
+                    Thread t1 = testCreate(d, 5000, ip);
+                    Thread t2 = testBid(d, 5000, ip);
                     t1.start();
                     t2.start();
                     t2.join();
@@ -92,12 +97,12 @@ public class AuctionSystemClientTester {
 
 
     }
-    public static Thread testCreate(Date d, int iterations) {
+    public static Thread testCreate(Date d, int iterations, String ip) {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 AuctionSystemClientImpl client;
                 try {
-                    client = new AuctionSystemClientImpl();
+                    client = new AuctionSystemClientImpl(ip);
                     for (int i = 0; i<iterations; i++){
                         client.createNewAuction("auction "+i, d, 100);
                     }
@@ -109,12 +114,12 @@ public class AuctionSystemClientTester {
         return t;
     }
 
-    public static Thread testBid(Date d, int iterations) {
+    public static Thread testBid(Date d, int iterations, String ip) {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 AuctionSystemClientImpl client;
                 try {
-                    client = new AuctionSystemClientImpl();
+                    client = new AuctionSystemClientImpl(ip);
                     int n = client.createNewAuction("auction",d, 100);
                     for (int i = 0; i<iterations; i++){
                         client.bid(n,i);
