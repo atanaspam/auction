@@ -208,7 +208,7 @@ public class AuctionSystemClientImpl extends java.rmi.server.UnicastRemoteObject
                         }else if(result == -2){ System.out.println("The begin date cannot be in the past.");}
                         else{ System.out.println("The id of your new auction is: " + result); }
                     }catch(ParseException e){
-                        System.out.println("Date must be of format: DD-MMM-YYYY HH:MM:SS. Example: 06 Nov 2015 18:00:00");
+                        System.out.println("Date must be of format: DD-MMM-YYYY HH:MM:SS. Example: 06-Nov-2015 18:00:00");
                     }catch(RemoteException e){
                         e.printStackTrace();
                     }catch(Exception e){
