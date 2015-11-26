@@ -132,7 +132,7 @@ public class AuctionPool{
                 iter.remove();
                 return true;
             }
-//        
+//
         }
         return false;
     }

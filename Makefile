@@ -5,7 +5,10 @@ INTERFACES=uk/ac/gla/atanaspam/auction/interfaces
 SERVER=uk/ac/gla/atanaspam/auction/server
 CLIENT=uk/ac/gla/atanaspam/auction/client
 
-all: compileinterface compileclient compileserver
+all: begin compileinterface compileclient compileserver
+
+begin:
+	if test -d out;	then echo "'out' exists"; else mkdir out ; fi
 
 compileinterface: $(SRC)/$(INTERFACES)/*.java
 	javac $(SRC)/$(INTERFACES)/*.java -d $(OUT)

@@ -167,6 +167,9 @@ public class AuctionSystemImpl extends java.rmi.server.UnicastRemoteObject imple
                     if(a.isFinished()){
                         auctionPool.addFinished(a);
                     }else {
+                        if (!clientPool.isRegistered(a.getOwner().getId())){
+                            clientPool.addClient(a.getOwner());
+                        }
                         auctionPool.addAuction(a);
                     }
                     System.out.println("Imported: "+ a);

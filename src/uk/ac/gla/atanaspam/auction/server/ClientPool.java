@@ -19,6 +19,9 @@ public class ClientPool {
         nextId = 1;
     }
 
+    public void addClient(Client c){
+        this.clients.add(c);
+    }
     public void register(int id){
         Client newClient = new Client(id);
         clients.add(newClient);
